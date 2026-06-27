@@ -434,12 +434,37 @@ buildLanterns();
 </div>
 
 <!-- AUDIO PLAYER - place song.mp3 in same folder as this HTML file -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="song.mp3" type="audio/mpeg">
-  <source src="neeyum-nanum.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" preload="auto"></audio>
+  
 
 <script>
+  // ===== Playlist =====
+const songs = [
+    "song.mp3",
+    "neeyum-nanum.mp3"
+];
+
+let currentSong = 0;
+const bgMusic = document.getElementById("bgMusic");
+
+bgMusic.src = songs[currentSong];
+
+// Music Start
+function startMusic() {
+    bgMusic.play().catch(err => console.log(err));
+}
+
+// Next Song
+bgMusic.addEventListener("ended", () => {
+    currentSong++;
+
+    if (currentSong >= songs.length) {
+        currentSong = 0; // மீண்டும் முதல் பாடல்
+    }
+
+    bgMusic.src = songs[currentSong];
+    bgMusic.play();
+});
 
 /* ── SONG AUTOPLAY ── */
 function playBgMusic(){
@@ -466,7 +491,7 @@ function checkPin(){
     lock.style.animation = 'fadeOutLock .5s ease forwards';
     setTimeout(function(){
       lock.style.display = 'none';
-      playBgMusic();
+      startMusic();
     }, 480);
     return;
   }
